@@ -1,0 +1,32 @@
+
+
+CREATE COMPUTE MODULE flow1_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+		SET OutputRoot.XMLNSC.Customer.Cno=InputRoot.XMLNSC.Employee.Eno;
+		SET OutputRoot.XMLNSC.Customer.Cname=InputRoot.XMLNSC.Employee.Ename || 'Raj';
+		SET OutputRoot.XMLNSC.Customer.Csal=CAST(InputRoot.XMLNSC.Employee.Esal As INTEGER) + 500;
+		IF InputRoot.XMLNSC.Employee.Edob<>NULL
+			THEN
+			SET OutputRoot.XMLNSC.Customer.Cdob VALUE = NULL;
+		END IF;
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
