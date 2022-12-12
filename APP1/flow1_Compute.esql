@@ -6,6 +6,7 @@ CREATE COMPUTE MODULE flow1_Compute
 		-- CALL CopyMessageHeaders();
 		-- CALL CopyEntireMessage();
 		
+		SET OutputRoot=InputRoot;
 		SET OutputRoot.XMLNSC.Customer.Cno=InputRoot.XMLNSC.Employee.Eno;
 		SET OutputRoot.XMLNSC.Customer.Cname=InputRoot.XMLNSC.Employee.Ename || 'Raj';
 		SET OutputRoot.XMLNSC.Customer.Csal=CAST(InputRoot.XMLNSC.Employee.Esal As INTEGER) + 500;
