@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <policies>
-  <policy policyType="ActivityLog" policyName="MyActivityLogPolicy" policyTemplate="Activity Log Template">
+  <policy policyType="ActivityLog" policyName="MyActivityLogPolicy" policyTemplate="ActivityLog">
     <enabled>true</enabled>
-    <executionGroupFilter></executionGroupFilter>
     <filter></filter>
     <minSeverityLevel>INFORMATIONAL</minSeverityLevel>
     <fileName>ChangeThisValueWhenFollowingTutorialInstructions</fileName>
