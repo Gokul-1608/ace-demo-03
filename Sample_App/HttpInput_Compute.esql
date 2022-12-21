@@ -6,9 +6,6 @@ CREATE COMPUTE MODULE HttpInput_Compute
 		-- CALL CopyMessageHeaders();
 		-- CALL CopyEntireMessage();
 		
---		Comment Line 1
---		Comment Line 2
---		Comment Line 3
 		SET OutputRoot.XMLNSC.Result='Sample Http Test';
 		
 		RETURN TRUE;
