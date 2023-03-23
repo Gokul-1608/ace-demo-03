@@ -1,0 +1,83 @@
+BROKER SCHEMA gen
+DECLARE ns NAMESPACE 'http://JSON_TO_DB_Service';
+
+CREATE COMPUTE MODULE getJsonData_Request_Response_JsonToDB
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+--		CONVERTING CHARACTER INPUT INTO JSON MESSAGE
+		DECLARE JsonMsg CHARACTER InputRoot.XMLNSC.ns:getJsonData.Input;
+		
+		DECLARE JsonBit BIT CAST(JsonMsg AS BIT CCSID 1208);		
+		CREATE LASTCHILD OF InputRoot DOMAIN 'JSON' PARSE(JsonBit CCSID 1208);
+		
+--		REFERENCING INPUT JSON MESSAGE
+		DECLARE Ref REFERENCE TO InputRoot.JSON.Data.Content;
+		DECLARE CostPriceRef REFERENCE TO Ref.Locations.Item.ItemCostPrices;
+		DECLARE SalesPriceRef REFERENCE TO Ref.Locations.Item.SalesPrice;
+		
+		DECLARE ITEM_NUMBER, COST_PRICE, COST_CURRENCY, INCOTERMS, INCOTERMS_LOCATION, SALES_PRICE, SALES_CURRENCY, STATUS CHARACTER;
+		DECLARE COST_VALID_FROM, COST_VALID_TO, SALES_VALID_FROM, SALES_VALID_TO DATE;
+		DECLARE pattern CHARACTER 'yyyy-MM-dd';
+		
+		SET ITEM_NUMBER			= Ref.PartNumber;
+		SET COST_PRICE			= CostPriceRef.Item.CostPrice;
+		SET COST_CURRENCY		= CostPriceRef.Item.Currency;
+		SET INCOTERMS			= CostPriceRef.Item.IncoTerms;
+		SET INCOTERMS_LOCATION	= CostPriceRef.Item.IncoTermsLocation;
+		SET COST_VALID_FROM		= CAST(SUBSTRING(CostPriceRef.Item.ValidFromUtc BEFORE 'T') AS DATE FORMAT pattern);
+		SET COST_VALID_TO		= CAST(SUBSTRING(CostPriceRef.Item.ValidToUtc BEFORE 'T') AS DATE FORMAT pattern);
+		SET SALES_PRICE			= SalesPriceRef.Item.Price;
+		SET SALES_CURRENCY		= SalesPriceRef.Item.Currency;
+		SET SALES_VALID_FROM	= CAST(SUBSTRING(SalesPriceRef.Item.ValidFromUtc BEFORE 'T') AS DATE FORMAT pattern);
+		SET SALES_VALID_TO		= CAST(SUBSTRING(SalesPriceRef.Item.ValidToUtc BEFORE 'T') AS DATE FORMAT pattern);
+		SET STATUS				= 200;
+		
+		INSERT INTO DataSource.json_db.json_table (ITEM_NUMBER,
+														COST_PRICE, 
+														COST_CURRENCY, 
+														INCOTERMS, 
+														INCOTERMS_LOCATION, 
+														COST_VALID_FROM, 
+														COST_VALID_TO, 
+														SALES_PRICE, 
+														SALES_CURRENCY, 
+														SALES_VALID_FROM, 
+														SALES_VALID_TO, STATUS) 
+												VALUES (ITEM_NUMBER, 
+														COST_PRICE, 
+														COST_CURRENCY, 
+														INCOTERMS, 
+														INCOTERMS_LOCATION,
+														COST_VALID_FROM, 
+														COST_VALID_TO, 
+														SALES_PRICE, 
+														SALES_CURRENCY, 
+														SALES_VALID_FROM, 
+														SALES_VALID_TO, 
+														STATUS);
+		
+		
+		DECLARE Response CHARACTER 'ITEM_NUMBER : '||ITEM_NUMBER||' Updated in DB';
+
+		SET OutputRoot.XMLNSC.ns:getJsonDataResponse.Output = Response;		
+		
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

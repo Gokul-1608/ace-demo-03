@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="JSON_TO_DB_Service" targetNamespace="http://JSON_TO_DB_Service" xmlns:bons1="http://JsonSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://JSON_TO_DB_Service" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:documentation>
+    <wsdl:appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <binding hasEncoding="false" imported="true" name="JSON_TO_DB_ServiceHttpBinding" originalBindingStyle="document"/>
+        <generatedXSD location="JSON_TO_DB_Service_InlineSchema1.xsd"/>
+      </MRWSDLAppInfo>
+    </wsdl:appinfo>
+  </wsdl:documentation>
+  
+  
+  
+  
+  <wsdl:types>
+    
+        <xsd:schema targetNamespace="http://JSON_TO_DB_Service" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+            <xsd:import namespace="http://JsonSchema" schemaLocation="JsonSchema.xsd"/>
+            <xsd:include schemaLocation="JSON_TO_DB_Service_InlineSchema1.xsd"/>
+    </xsd:schema>
+    </wsdl:types>
+  <wsdl:message name="getJsonDataRequestMsg">
+    <wsdl:part element="tns:getJsonData" name="getJsonDataParameters"/>
+  </wsdl:message>
+  <wsdl:message name="getJsonDataResponseMsg">
+    <wsdl:part element="tns:getJsonDataResponse" name="getJsonDataResult"/>
+  </wsdl:message>
+    <wsdl:portType name="JSON_TO_DB_Service">
+    <wsdl:operation name="getJsonData">
+      <wsdl:input message="tns:getJsonDataRequestMsg" name="getJsonDataRequest"/>
+      <wsdl:output message="tns:getJsonDataResponseMsg" name="getJsonDataResponse"/>
+    </wsdl:operation>
+    </wsdl:portType>
+  <wsdl:binding name="JSON_TO_DB_ServiceHttpBinding" type="tns:JSON_TO_DB_Service">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getJsonData">
+            <soap:operation soapAction="http://JSON_TO_DB_Service/getJsonData"/>
+            <wsdl:input name="getJsonDataRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+      <wsdl:output name="getJsonDataResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+    </wsdl:operation>
+    </wsdl:binding>
+  <wsdl:service name="JSON_TO_DB_ServiceHttpService">
+    <wsdl:port binding="tns:JSON_TO_DB_ServiceHttpBinding" name="JSON_TO_DB_ServiceHttpPort">
+      <soap:address location="http://localhost:7803/JSON_TO_DB_Service"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

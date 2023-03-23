@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://JSON_TO_DB_Service" xmlns:ns1="http://JsonSchema" xmlns:tns="http://JSON_TO_DB_Service">
+    <xsd:import namespace="http://JsonSchema" schemaLocation="JsonSchema.xsd"/>
+    <xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getJsonData">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Input" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" ibmSchExtn:docRoot="true" name="getJsonDataResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Output" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>

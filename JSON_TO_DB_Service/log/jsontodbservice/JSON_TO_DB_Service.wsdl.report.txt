@@ -1,0 +1,15 @@
+
+
+Importing file: C:\Users\gokul.raj\IBM\ACET11\workspace\JSON_TO_DB_Service\JSON_TO_DB_Service.wsdl
+
+The WSDL import will proceed with bindings JSON_TO_DB_ServiceHttpBinding.
+Creating wsdl schema document for platform:/resource/JSON_TO_DB_Service/JSON_TO_DB_Service.wsdl.
+Parsing wsdl binding {http://JSON_TO_DB_Service}JSON_TO_DB_ServiceHttpBinding.
+Parsing wsdl binding input getJsonData.
+Parsing wsdl binding output getJsonData.
+Processing doc style for operation getJsonData.
+Populating WSDL schema JSON_TO_DB_Service.xsd.
+Creating file JSON_TO_DB_Service.xsd in the workspace.
+Creating file JSON_TO_DB_Service_InlineSchema1.xsd in the workspace.
+Creating file /JSON_TO_DB_Service/JsonSchema.xsd in the workspace.
+Copying source WSDL JSON_TO_DB_Service.wsdl to JSON_TO_DB_Service.wsdl.

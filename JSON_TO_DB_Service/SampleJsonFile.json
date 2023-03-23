@@ -1,0 +1,94 @@
+{
+   "Id":"284644-PDB",
+   "Type":"PublishedGoldenRecord",
+   "TypeVersion":1,
+   "LastModifiedUtc":"2022-07-26T22:48:49.6069724Z",
+   "Content":{
+      "PartNumber":"284644-PDB",
+      "Revision":1,
+      "Name":"EV Crusher",
+      "PdmSource":"Enovia",
+      "Reporting":"Bearing",
+      "Category":"Casting/Forgings",
+      "EquipmentSection":"Bearing section",
+      "WeightKg":95.50,
+      "PartType":"N/A?",
+      "DrawingNumber":"20045473",
+      "PatternIdentification":"PP-2926",
+      "MatCode":"2560",
+      "Typology":[
+         {
+            "Industry":"",
+            "Group":"Pyro",
+            "Line":"Firing Systems",
+            "Model":"Duoflex Burner",
+            "Code":"DBU"
+         }
+      ],
+      "Notes":[
+         "Remember to offer complete rotor insted of rotor shaft (PDB-2051212)",
+         "Note to buyer2"
+      ],
+      "AlternateNumbers":[
+         "284644-42-PDB",
+         "284644-1337-PDB"
+      ],
+      "Products":[
+         {
+            "MachineType":"EV Crusher 150x150",
+            "ProductVariant":"150x200"
+         }
+      ],
+      "Locations":[
+         {
+            "Region":null,
+            "Country":"DK",
+            "Customer":null,
+            "SourcingPlans":[
+               {
+                  "SupplierGroupName":"SKF",
+                  "Typology":{
+                     "Industry":"",
+                     "Group":"Pyro",
+                     "Line":"Firing Systems",
+                     "Model":"Duoflex Burner",
+                     "Code":"DBU"
+                  }
+               }
+            ],
+            "ItemCostPrices":[
+               {
+                  "PricingType":"PriceList?",
+                  "SupplierName":"SKF [GLOBAL]",
+                  "SupplierNumber":"1234",
+                  "ValidFromUtc":"2022-01-12T11:00:00Z",
+                  "ValidToUtc":"2022-12-31T11:00:00Z",
+                  "IncoTerms":"DAP",
+                  "IncoTermsLocation":"Nefab, Germany",
+                  "CostPrice":6430.0,
+                  "Currency":"DKK",
+                  "UnitOfMeasure":"EA",
+                  "LeadTimeWeeks":2,
+                  "MinimumOrderQuantity":42
+               }
+            ],
+            "SalesPrice":[
+               {
+                  "PriceType":"PriceList?",
+                  "Price":10716.7,
+                  "Currency":"DKK",
+                  "ValidFromUtc":"2022-01-12T11:00:00Z",
+                  "ValidToUtc":"2022-12-31T11:00:00Z"
+               }
+            ]
+         }
+      ],
+      "AdditionalCosts":[
+         {
+            "CostType":"PatternCost",
+            "CostPrice":2750.0,
+            "Currency":"EUR"
+         }
+      ]
+   }
+}
