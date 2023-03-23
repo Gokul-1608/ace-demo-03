@@ -1,0 +1,92 @@
+
+
+CREATE COMPUTE MODULE Json_To_DB_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+		IF InputRoot.Properties.ContentType = 'application/json' THEN
+			
+			DECLARE ITEM_NUMBER CHARACTER;
+			DECLARE COST_PRICE FLOAT;
+			DECLARE COST_CURRENCY CHARACTER;
+			DECLARE INCOTERMS CHARACTER;
+			DECLARE INCOTERMS_LOCATION CHARACTER;
+			DECLARE COST_VALID_FROM DATE;
+			DECLARE COST_VALID_TO DATE;
+			DECLARE SALES_PRICE FLOAT;
+			DECLARE SALES_CURRENCY CHARACTER;
+			DECLARE SALES_VALID_FROM CHARACTER;
+			DECLARE SALES_VALID_TO CHARACTER;
+			DECLARE STATUS INTEGER;
+			DECLARE pattern CHARACTER 'yyyy-MM-dd';
+			
+			DECLARE COST_VFC CHARACTER InputRoot.JSON.Data.Content.Locations.Item.ItemCostPrices.Item.ValidFromUtc;
+			DECLARE COST_VTC CHARACTER InputRoot.JSON.Data.Content.Locations.Item.ItemCostPrices.Item.ValidToUtc;
+			DECLARE SALES_VFC CHARACTER InputRoot.JSON.Data.Content.Locations.Item.SalesPrice.Item.ValidFromUtc;
+			DECLARE SALES_VTC CHARACTER InputRoot.JSON.Data.Content.Locations.Item.SalesPrice.Item.ValidToUtc;
+			DECLARE COST_VF CHARACTER SUBSTRING(COST_VFC BEFORE 'T');
+			DECLARE COST_VT CHARACTER SUBSTRING(COST_VTC BEFORE 'T');
+			DECLARE SALES_VF CHARACTER SUBSTRING(SALES_VFC BEFORE 'T');
+			DECLARE SALES_VT CHARACTER SUBSTRING(SALES_VTC BEFORE 'T');
+			
+			SET ITEM_NUMBER			= InputRoot.JSON.Data.Content.PartNumber;
+			SET COST_PRICE			= InputRoot.JSON.Data.Content.Locations.Item.ItemCostPrices.Item.CostPrice;
+			SET COST_CURRENCY		= InputRoot.JSON.Data.Content.Locations.Item.ItemCostPrices.Item.Currency;
+			SET INCOTERMS			= InputRoot.JSON.Data.Content.Locations.Item.ItemCostPrices.Item.IncoTerms;
+			SET INCOTERMS_LOCATION	= InputRoot.JSON.Data.Content.Locations.Item.ItemCostPrices.Item.IncoTermsLocation;
+			SET COST_VALID_FROM		= CAST(COST_VF AS DATE FORMAT pattern);
+			SET COST_VALID_TO		= CAST(COST_VT AS DATE FORMAT pattern);
+			SET SALES_PRICE			= InputRoot.JSON.Data.Content.Locations.Item.SalesPrice.Item.Price;
+			SET SALES_CURRENCY		= InputRoot.JSON.Data.Content.Locations.Item.SalesPrice.Item.Currency;
+			SET SALES_VALID_FROM	= CAST(SALES_VF AS CHARACTER FORMAT pattern);
+			SET SALES_VALID_TO		= CAST(SALES_VT AS CHARACTER FORMAT pattern);
+			SET STATUS				= 200;
+			
+			INSERT INTO DataSource.json_db.json_table (ITEM_NUMBER,
+														COST_PRICE, 
+														COST_CURRENCY, 
+														INCOTERMS, 
+														INCOTERMS_LOCATION, 
+														COST_VALID_FROM, 
+														COST_VALID_TO, 
+														SALES_PRICE, 
+														SALES_CURRENCY, 
+														SALES_VALID_FROM, 
+														SALES_VALID_TO, STATUS) 
+												VALUES (ITEM_NUMBER, 
+														COST_PRICE, 
+														COST_CURRENCY, 
+														INCOTERMS, 
+														INCOTERMS_LOCATION,
+														COST_VALID_FROM, 
+														COST_VALID_TO, 
+														SALES_PRICE, 
+														SALES_CURRENCY, 
+														SALES_VALID_FROM, 
+														SALES_VALID_TO, 
+														STATUS);
+		
+			SET OutputRoot.JSON.Data.Response = 'ITEM_NUMBER : '||ITEM_NUMBER||' Updated in DB';
+		ELSE
+			SET OutputRoot.JSON.Data.Response = 'JSON Format Only Accepted!';
+		END IF;
+		
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
