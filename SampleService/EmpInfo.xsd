@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.employee.details" xmlns:p="http://www.employee.details">
+  <xsd:element name="Employees" type="p:EmployeesType"/>
+  <xsd:complexType name="EmployeesType">
+    <xsd:sequence>
+      <xsd:element name="EmployeesRequest" type="p:EmployeesRequestType"/>
+      <xsd:element name="EmployeesResponse" type="p:EmployeesResponseType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EmployeesRequestType">
+  	<xsd:sequence>
+  		<xsd:element name="EID" type="p:EIDType" />
+  	</xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="EIDType">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:complexType name="EmployeesResponseType">
+    <xsd:sequence>
+      <xsd:element name="EmpID" type="p:EmpIDType"/>
+      <xsd:element name="EName" type="p:ENameType"/>
+      <xsd:element name="ESal" type="p:ESalType"/>
+      <xsd:element name="EAdd" type="p:EAddType"/>
+      <xsd:element name="EPh" type="p:EPhType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="EmpIDType">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="ENameType">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="ESalType">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="EAddType">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="EPhType">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+</xsd:schema>

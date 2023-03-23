@@ -1,0 +1,42 @@
+BROKER SCHEMA gen
+DECLARE ns NAMESPACE 'http://SampleService';
+
+
+CREATE COMPUTE MODULE getEmployeeDetails_Request_Response_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+		DECLARE Ename CHARACTER 'Gokul';
+		DECLARE Esal FLOAT 1000.00;
+		DECLARE Eadd CHARACTER 'Coimbatore';
+		DECLARE Eph INTEGER 9988776655;
+		
+		DECLARE EID CHARACTER InputRoot.XMLNSC.ns:getEmployeeDetails.Input.EID;
+		
+		IF EID <> '' THEN
+			SET OutputRoot.XMLNSC.ns:getEmployeeDetailsResponse.Output.EName = Ename;
+			SET OutputRoot.XMLNSC.ns:getEmployeeDetailsResponse.Output.ESal = Esal;
+			SET OutputRoot.XMLNSC.ns:getEmployeeDetailsResponse.Output.EAdd = Eadd;
+			SET OutputRoot.XMLNSC.ns:getEmployeeDetailsResponse.Output.EPh = Eph;
+		ELSE
+			SET OutputRoot.XMLNSC.Error = 'Error in Your Code';
+		END IF;
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

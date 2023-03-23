@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:Employees xmlns:p="http://www.employee.details">
+	<EmployeesRequest>
+		<EID>EMP1001</EID>
+	</EmployeesRequest>
+	<EmployeesResponse>
+		<EmpID>EMP1001</EmpID>
+		<EName>Name</EName>
+		<ESal>10000.00</ESal>
+		<EAdd>ABCD, ABCD, 123456</EAdd>
+		<EPh>9876543210</EPh>
+	</EmployeesResponse>
+</p:Employees>
