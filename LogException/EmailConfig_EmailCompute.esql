@@ -1,0 +1,42 @@
+
+
+CREATE COMPUTE MODULE EmailConfig_EmailCompute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		CALL CopyEntireMessage();
+		
+		DECLARE Query CHARACTER;
+		DECLARE Details ROW;
+		
+		SET Query = 'SELECT * FROM sample.exception ORDER BY CurrTimeStamp Desc LIMIT 1';
+		SET Details = PASSTHRU(Query);
+		SET OutputRoot.XMLNSC.Details=Details;
+		
+		SET OutputRoot.EmailOutputHeader.To = 'gokul.raj@gramenerit.com';
+		SET OutputRoot.EmailOutputHeader.Cc = '';
+		SET OutputRoot.EmailOutputHeader.Bcc = '';
+		SET OutputRoot.EmailOutputHeader.From = 'gokulsam1608@gmail.com';
+		SET OutputRoot.EmailOutputHeader."Reply-To" = '';
+		SET OutputRoot.EmailOutputHeader.Subject = 'Email Test Configuration';
+		
+		SET OutputRoot.BLOB.BLOB = ASBITSTREAM(OutputRoot.XMLNSC.Details OPTIONS FolderBitStream);
+		
+		SET OutputLocalEnvironment.Destination.Email.BodyContentType = 'text/plain; charset=utf-8';
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
