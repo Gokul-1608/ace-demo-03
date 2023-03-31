@@ -1,0 +1,18 @@
+
+
+CREATE FILTER MODULE Supplier_Flow_Scheduling_Mon_Fri
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE week_day_i INTEGER;
+		DECLARE week_day_c CHARACTER;
+		SET week_day_c = CAST(CURRENT_DATE AS CHARACTER FORMAT 'e');
+		SET week_day_i = CAST(week_day_c AS INTEGER);
+		
+		--Day Numbers ==> SUN=1, MON=2, TUE=3, WED=4, THU=5, FRI=6, SAT=7
+		IF week_day_i = 2 OR week_day_i = 6 THEN
+			RETURN TRUE;
+		ELSE
+			RETURN FALSE;
+		END IF;
+	END;
+END MODULE;
