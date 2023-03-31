@@ -1,0 +1,123 @@
+CREATE COMPUTE MODULE Supplier_Oracle_Flow_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+		
+--		Checking Monday Or Friday
+		DECLARE week_day_i INTEGER;
+		DECLARE week_day_c CHARACTER;
+		SET week_day_c = CAST(CURRENT_DATE AS CHARACTER FORMAT 'e');
+		SET week_day_i = CAST(week_day_c AS INTEGER);
+		
+--		Day Numbers ==> SUN=1, MON=2, TUE=3, WED=4, THU=5, FRI=6, SAT=7
+		IF week_day_i = 2 OR week_day_i = 6 THEN
+		
+--		Declaration for fetching values
+		DECLARE query CHARACTER;
+		DECLARE fetch ROW;
+		DECLARE count INTEGER;
+		DECLARE outRef, SupplierRef, RecordRef, HeaderRef REFERENCE TO OutputRoot;
+		
+--		Fetching Values From Database											--		`Supplier_ID`,
+		SET query = 'SELECT * FROM supplier.supp_std01p';						--		SET query = 'SELECT `Name`, `Source`, `D_Number`, `Supplier_Number`,`Site_Code`, `Group`, `Relationship_Start_Date`, `Supplier_Status.Caption`, `City`, `Street_Address`, `Postal_Code`, `Country.Name`, `Supplier_Region`, `Website`, `Phone_No`, `Fax_No.`, `CREATION_DATE` FROM supplier.supp_std01p';																				
+		SET fetch.[] = PASSTHRU(query);
+		SET count = CARDINALITY(fetch.[]);
+		
+--		Below 3 lines were similar to --> OutputRoot.DFDL.Supplier_Oracle.Header
+		CREATE LASTCHILD OF OutputRoot AS outRef DOMAIN 'DFDL';
+		CREATE LASTCHILD OF outRef AS SupplierRef NAME 'Supplier_Oracle';
+		CREATE LASTCHILD OF SupplierRef AS HeaderRef NAME 'Header';
+		
+--		Below Line refers *SET OutputRoot.DFDL.Supplier_Oracle.Header.Supplier_ID = 'Supplier_ID';*
+		SET HeaderRef.Supplier_ID				= 'Supplier_ID';
+		SET HeaderRef.Name						= 'Name';
+		SET HeaderRef.Source					= 'Source';
+		SET HeaderRef.D_Number					= 'D_Number';
+		SET HeaderRef.Supplier_Number			= 'Supplier_Number';
+		SET HeaderRef.Site_Code					= 'Site_Code';
+		SET HeaderRef.Group						= 'Group';
+		SET HeaderRef.Relationship_Start_Date	= 'Relationship_Start_Date';
+		SET HeaderRef.Supplier_Status_Caption	= 'Supplier_Status.Caption';
+		SET HeaderRef.City						= 'City';
+		SET HeaderRef.Street_Address			= 'Street_Address';
+		SET HeaderRef.Postal_Code				= 'Postal_Code';
+		SET HeaderRef.Country_Name				= 'Country.Name';
+		SET HeaderRef.Supplier_Region			= 'Supplier_Region';
+		SET HeaderRef.Website					= 'Website';
+		SET HeaderRef.Phone_No					= 'Phone_No';
+		SET HeaderRef.Fax_No					= 'Fax_No.';
+		SET HeaderRef.CREATION_DATE				= 'CREATION_DATE';
+		
+--		Using loop for getting all rows
+		FOR RowRef AS fetch.[] DO
+			CREATE LASTCHILD OF SupplierRef AS RecordRef NAME 'Record';
+			
+--			Below Line refers *SET OutputRoot.DFDL.Supplier_Oracle.Record.Supplier_ID = fetch.[i].Supplier_ID;*
+			SET RecordRef.Supplier_ID				= FIELDVALUE(RowRef."Supplier_ID");
+			SET RecordRef.Name						= FIELDVALUE(RowRef."Name");
+			SET RecordRef.Source					= FIELDVALUE(RowRef."Source");
+			SET RecordRef.D_Number					= FIELDVALUE(RowRef."D_Number");
+			SET RecordRef.Supplier_Number			= FIELDVALUE(RowRef."Supplier_Number");
+			SET RecordRef.Site_Code					= FIELDVALUE(RowRef."Site_Code");
+			SET RecordRef.Group						= FIELDVALUE(RowRef."Group");
+			SET RecordRef.Relationship_Start_Date	= FIELDVALUE(RowRef."Relationship_Start_Date");
+			SET RecordRef.Supplier_Status_Caption	= FIELDVALUE(RowRef."Supplier_Status.Caption");
+			SET RecordRef.City						= FIELDVALUE(RowRef."City");
+			SET RecordRef.Street_Address			= FIELDVALUE(RowRef."Street_Address");
+			SET RecordRef.Postal_Code				= FIELDVALUE(RowRef."Postal_Code");
+			SET RecordRef.Country_Name				= FIELDVALUE(RowRef."Country.Name");
+			SET RecordRef.Supplier_Region			= FIELDVALUE(RowRef."Supplier_Region");
+			SET RecordRef.Website					= FIELDVALUE(RowRef."Website");
+			SET RecordRef.Phone_No					= FIELDVALUE(RowRef."Phone_No");
+			SET RecordRef.Fax_No					= FIELDVALUE(RowRef."Fax_No.");
+			
+--			Below changing the Date format as '16-AUG-99' from '99-08-16'(yy-mm-dd)
+			DECLARE pattern CHARACTER 'dd-MMM-yy';
+			SET RecordRef.CREATION_DATE				= CAST(FIELDVALUE(RowRef.CREATION_DATE) AS CHARACTER FORMAT pattern);
+--			FIELDVALUE(RowRef."CREATION_DATE");
+			
+		END FOR;
+		
+		IF EXISTS(OutputRoot.DFDL.Supplier_Oracle.Record[]) THEN
+--			SET OutputLocalEnvironment.Destination.File.Name = 'SUPPLIER_ORACLE_STD_01' || '.csv';
+			RETURN TRUE;
+		ELSE
+			RETURN FALSE;
+		END IF;
+		
+		ELSE
+--			SET OutputRoot.XMLNSC.Result.Test_Msg = 'It will execute only on Monday & Friday';
+--			PROPAGATE TO TERMINAL 'out1' DELETE NONE;
+			RETURN FALSE;	
+		END IF;
+		
+		
+--		SET OutputRoot.XMLNSC.Result.Test_Msg = 'It will execute only on Monday & Friday';
+--		PROPAGATE TO TERMINAL 'out1' DELETE NONE;
+--		RETURN FALSE;
+
+--		DECLARE i INTEGER 1;
+--		WHILE i<=count DO
+--			SET OutputRoot.XMLNSC.Final.Result[i] = fetch.[i];
+--			SET OutputRoot.DFDL.Supplier_Oracle.Record.Name = fetch.[i].Name;
+--			SET OutputRoot.DFDL.Supplier_Oracle.Record.[i] = fetch.[i];
+--			SET i = i+1;
+--		END WHILE;
+--		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
