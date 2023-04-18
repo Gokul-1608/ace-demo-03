@@ -1,0 +1,61 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "RestfulServiceSample",
+    "version" : "1.0.0",
+    "description" : "RestfulServiceSample"
+  },
+  "paths" : {
+    "/getStudentEligibilty" : {
+      "post" : {
+        "operationId" : "postGetStudentEligibilty",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "type" : "integer"
+            }
+          }
+        },
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "description" : "Insert a getStudentEligibilty",
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/StudentDetails"
+          },
+          "description" : "The request body for the operation",
+          "required" : true
+        } ]
+      }
+    }
+  },
+  "basePath" : "/restfulservicesample/v1",
+  "definitions" : {
+    "StudentDetails" : {
+      "type" : "object",
+      "properties" : {
+        "Student_ID" : {
+          "type" : "object",
+          "properties" : { }
+        },
+        "Student_Name" : {
+          "type" : "string"
+        },
+        "Student_Class" : {
+          "type" : "string"
+        }
+      }
+    },
+    "StudentDetailsResponse" : {
+      "type" : "object",
+      "properties" : {
+        "Response_Message" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
